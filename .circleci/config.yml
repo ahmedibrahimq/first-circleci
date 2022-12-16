@@ -1,30 +1,26 @@
 version: 2.1
 
 jobs:
-  print_hello:
+  write_file:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
-      - run: echo "hello"
-
-  print_world:
+      - run: echo "hello world" > /tmp/workspace/hello_world.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - hello_world.txt
+  read_file:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
-      - run: echo "world"
-
-  print_my_name:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo $MY_NAME
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cat hello_world.txt
 workflows:
-  hello-world:
+  sharing files:
     jobs:
-      - print_hello
-      - print_world:
+      - write_file
+      - read_file:
           requires:
-            - print_hello
-  try-env-vars:
-    jobs:
-      - print_my_name
+            - write_file
