@@ -5,9 +5,9 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run: echo "hello world" > /tmp/workspace/hello_world.txt
+      - run: echo "hello world" > ~/hello_world.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
             - hello_world.txt
   read_file:
@@ -15,8 +15,8 @@ jobs:
       - image: cimg/base:stable
     steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - run: cat hello_world.txt
+          at: ~/
+      - run: cat ~/hello_world.txt
 workflows:
   sharing files:
     jobs:
