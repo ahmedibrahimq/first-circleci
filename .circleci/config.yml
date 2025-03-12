@@ -1,0 +1,26 @@
+version: 2.1
+
+jobs:
+  write_file:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "hello world" > ~/hello_world.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - hello_world.txt
+  read_file:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/hello_world.txt
+workflows:
+  sharing files:
+    jobs:
+      - write_file
+      - read_file:
+          requires:
+            - write_file
